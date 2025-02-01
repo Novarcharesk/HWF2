@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 53c77328b59788e43892087db6f87fab
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 294367
+  packageName: Platformer 11 Space - Low Poly Asset Pack by ithappy
+  packageVersion: 1.1
+  assetPath: Assets/ithappy/Platformer_11_Space/Scripts/OscillateScale.cs
+  uploadId: 710810

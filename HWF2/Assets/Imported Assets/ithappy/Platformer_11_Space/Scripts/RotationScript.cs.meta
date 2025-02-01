@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: c9ed3cc64b2be9b41ac729756a103a85
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 294367
+  packageName: Platformer 11 Space - Low Poly Asset Pack by ithappy
+  packageVersion: 1.1
+  assetPath: Assets/ithappy/Platformer_11_Space/Scripts/RotationScript.cs
+  uploadId: 710810
