@@ -5,12 +5,15 @@ public class PlayerController : MonoBehaviour
 {
     public float moveSpeed = 5f;
     public float rotationSpeed = 300f;
-    public float kickForce = 10f;
+    public float pushForce = 10f; // Force when running into objects
+    public float kickForce = 10f; // Force for the kick action
+    public float gravity = -9.81f; // Gravity strength
     public int playerIndex = 0; // 0 for Player 1, 1 for Player 2
 
     private CharacterController characterController;
     private Vector2 moveInput;
     private PlayerInput playerInput;
+    private float verticalVelocity; // Tracks falling speed
 
     private void Awake()
     {
@@ -45,8 +48,20 @@ public class PlayerController : MonoBehaviour
 
     private void MoveCharacter()
     {
-        Vector3 move = new Vector3(-moveInput.x, 0, -moveInput.y);
-        characterController.Move(move * moveSpeed * Time.deltaTime);
+        Vector3 move = new Vector3(moveInput.x, 0, moveInput.y).normalized;
+
+        // Apply gravity inline
+        if (characterController.isGrounded && verticalVelocity < 0f)
+        {
+            verticalVelocity = -1f; // Keep grounded
+        }
+        else
+        {
+            verticalVelocity += gravity * Time.deltaTime; // Fall when not grounded
+        }
+
+        move = move * moveSpeed + Vector3.up * verticalVelocity;
+        characterController.Move(move * Time.deltaTime);
     }
 
     private void RotateCharacter()
@@ -56,6 +71,17 @@ public class PlayerController : MonoBehaviour
             float targetAngle = Mathf.Atan2(moveInput.x, moveInput.y) * Mathf.Rad2Deg;
             Quaternion targetRotation = Quaternion.Euler(0, targetAngle, 0);
             transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+        }
+    }
+
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        Rigidbody rb = hit.gameObject.GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            Vector3 forceDirection = hit.moveDirection.normalized;
+            float forceMagnitude = moveInput.magnitude * pushForce;
+            rb.AddForce(forceDirection * forceMagnitude, ForceMode.Impulse);
         }
     }
 
@@ -70,10 +96,5 @@ public class PlayerController : MonoBehaviour
                 rb.AddForce(transform.forward * kickForce, ForceMode.Impulse);
             }
         }
-    }
-
-    public void Bounce(float bounceStrength)
-    {
-        characterController.Move(new Vector3(0, 1 * bounceStrength, 0));
     }
 }
