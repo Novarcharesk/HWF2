@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5669294249690827847}
-  - component: {fileID: 1699185870339899747}
   m_Layer: 0
   m_Name: Monorail
   m_TagString: Untagged
@@ -33,18 +32,6 @@ Transform:
   - {fileID: 7744372322756064940}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1699185870339899747
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4373783099358144981}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa9cca1bf111b8a42b5e2e07a435c3b6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &4836694978642735037
 GameObject:
   m_ObjectHideFlags: 0

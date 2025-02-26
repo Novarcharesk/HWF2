@@ -45,7 +45,7 @@ public class PlayerController : MonoBehaviour
 
     private void MoveCharacter()
     {
-        Vector3 move = new Vector3(moveInput.x, 0, moveInput.y);
+        Vector3 move = new Vector3(-moveInput.x, 0, -moveInput.y);
         characterController.Move(move * moveSpeed * Time.deltaTime);
     }
 
