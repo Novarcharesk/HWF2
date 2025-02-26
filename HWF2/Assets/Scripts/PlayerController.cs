@@ -97,4 +97,13 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+feature/powerups
+
+    public void Bounce(float bounceStrength)
+    {
+        characterController.Move(new Vector3(0, 1 * bounceStrength, 0));
+    }
 }
+=======
+}
+develop
