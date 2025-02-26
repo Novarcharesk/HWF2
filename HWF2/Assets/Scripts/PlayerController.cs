@@ -97,4 +97,9 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+
+    public void Bounce(float bounceStrength)
+    {
+        characterController.Move(new Vector3(0, 1 * bounceStrength, 0));
+    }
 }
