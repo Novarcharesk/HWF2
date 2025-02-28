@@ -2,12 +2,30 @@ using UnityEngine;
 
 public class ItemBox : MonoBehaviour
 {
-    [SerializeField] private float respawnTime = 30f;         // Time before box respawns
+    [SerializeField] private float respawnTime = 30f;         // Time before box respawns (optional, for future use)
     [SerializeField] private GameObject boxVisual;           // The visible part of the box
-    [SerializeField] private HazardSpawner HazardSpawners;   // Reference to the spawner
+    [SerializeField] private HazardSpawner HazardSpawners;   // Reference to the spawner (can be left unassigned in prefab)
 
     private bool isActive = true;
-    private float timer;
+    private HazardSpawner cachedHazardSpawners; // Cache the spawner for efficiency
+
+    void Awake()
+    {
+        // Try to find the HazardSpawners in the scene if not assigned in Inspector
+        if (HazardSpawners == null)
+        {
+            HazardSpawners = FindObjectOfType<HazardSpawner>();
+            if (HazardSpawners != null)
+            {
+                Debug.Log("Found HazardSpawners dynamically: " + HazardSpawners.name);
+            }
+            else
+            {
+                Debug.LogError("Could not find HazardSpawners in the scene!");
+            }
+        }
+        cachedHazardSpawners = HazardSpawners; // Cache it
+    }
 
     void OnTriggerEnter(Collider other)
     {
@@ -16,21 +34,21 @@ public class ItemBox : MonoBehaviour
         Debug.Log("Player tag check: " + other.CompareTag("Player")); // Log tag check
         if (isActive && other.CompareTag("Player"))
         {
-            if (HazardSpawners != null)
+            if (cachedHazardSpawners != null) // Use cached reference
             {
-                Debug.Log("HazardSpawners assigned: " + HazardSpawners.name); // Log spawner assignment
-                Debug.Log("HazardSpawners active: " + HazardSpawners.gameObject.activeInHierarchy); // Log if spawner is active
-                HazardSpawner spawnerCheck = HazardSpawners.GetComponent<HazardSpawner>();
+                Debug.Log("HazardSpawners assigned: " + cachedHazardSpawners.name); // Log spawner assignment
+                Debug.Log("HazardSpawners active: " + cachedHazardSpawners.gameObject.activeInHierarchy); // Log if spawner is active
+                HazardSpawner spawnerCheck = cachedHazardSpawners.GetComponent<HazardSpawner>();
                 if (spawnerCheck != null)
                 {
                     Debug.Log("HazardSpawner component found and valid");
                 }
                 else
                 {
-                    Debug.LogError("HazardSpawner component is missing on " + HazardSpawners.name);
+                    Debug.LogError("HazardSpawner component is missing on " + cachedHazardSpawners.name);
                 }
                 Debug.Log("Triggering HazardSpawner to spawn hazards"); // Log before triggering
-                HazardSpawners.SpawnHazards(); // Tell the spawner to do its job
+                cachedHazardSpawners.SpawnHazards(); // Tell the spawner to do its job
             }
             else
             {
@@ -50,30 +68,12 @@ public class ItemBox : MonoBehaviour
         }
     }
 
-    void Update()
-    {
-        if (!isActive)
-        {
-            timer -= Time.deltaTime;
-            if (timer <= 0)
-            {
-                Respawn();
-            }
-        }
-    }
-
     private void Deactivate()
     {
         isActive = false;
         if (boxVisual != null) boxVisual.SetActive(false);
         gameObject.GetComponent<Collider>().enabled = false;
-        timer = respawnTime;
-    }
-
-    private void Respawn()
-    {
-        isActive = true;
-        if (boxVisual != null) boxVisual.SetActive(true);
-        gameObject.GetComponent<Collider>().enabled = true;
+        // Instead of respawning here, let ItemBoxSpawner handle respawning
+        Destroy(gameObject, 0.1f); // Destroy after a small delay to ensure collision is processed
     }
 }
