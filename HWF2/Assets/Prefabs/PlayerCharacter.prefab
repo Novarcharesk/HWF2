@@ -73,7 +73,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
-  rotationSpeed: 1000
+  rotationSpeed: 300
   kickForce: 10
   playerIndex: 0
 --- !u!114 &5347135161901909686

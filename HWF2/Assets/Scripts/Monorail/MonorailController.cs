@@ -1,66 +1,66 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
-public class MonorailGoalController : MonoBehaviour
+public class MonorailController : MonoBehaviour
 {
-    public Transform leftGoalMonorail;  // Monorail on the left side
-    public Transform rightGoalMonorail; // Monorail on the right side
-    public float moveSpeed = 10f;  // Speed of the monorail movement
-    public float goalDuration = 5f; // How long a monorail stays as a goal
+    [System.Serializable]
+    public class Monorail
+    {
+        public Transform monorailTransform; // Reference to the monorail GameObject
+        public Transform startPoint; // Start position
+        public Transform endPoint; // End position
+    }
 
-    private Vector3 leftGoalPosition;
-    private Vector3 rightGoalPosition;
-    private Vector3 leftStartPosition;
-    private Vector3 rightStartPosition;
+    public List<Monorail> monorails = new List<Monorail>();
+    public float totalGameTime = 60f; // Total duration for all monorails to complete their cycles
+    public AnimationCurve movementCurve; // Optional curve for smooth motion
 
     private void Start()
     {
-        // Define goal positions
-        leftGoalPosition = Vector3.zero;
-        rightGoalPosition = Vector3.zero;
-
-        // Define start positions (offscreen)
-        leftStartPosition = leftGoalPosition + Vector3.forward * 20f;
-        rightStartPosition = rightGoalPosition + Vector3.forward * 20f;
-
-        // Set initial positions
-        leftGoalMonorail.localPosition = leftStartPosition;
-        rightGoalMonorail.localPosition = rightStartPosition;
-
-        // Start the monorail movement cycle
-        StartCoroutine(GoalCycle());
+        StartCoroutine(ControlMonorails());
     }
 
-    private IEnumerator GoalCycle()
+    private IEnumerator ControlMonorails()
     {
-        while (true)
+        float segmentTime = totalGameTime / monorails.Count; // Time each monorail gets
+
+        foreach (var monorail in monorails)
         {
-            // Move left monorail in and make it a goal
-            yield return MoveMonorail(leftGoalMonorail, leftStartPosition, leftGoalPosition);
-            yield return new WaitForSeconds(goalDuration);
-
-            yield return MoveMonorail(rightGoalMonorail, rightStartPosition, rightGoalPosition);
-            yield return MoveMonorail(leftGoalMonorail, leftGoalPosition, leftStartPosition);
-
-            // Move right monorail in and make it a goal
-            yield return new WaitForSeconds(goalDuration);
-            yield return MoveMonorail(rightGoalMonorail, rightGoalPosition, rightStartPosition);
+            yield return MoveMonorail(monorail, segmentTime);
         }
     }
 
-    private IEnumerator MoveMonorail(Transform monorail, Vector3 start, Vector3 end)
+    private IEnumerator MoveMonorail(Monorail monorail, float segmentTime)
     {
-        float distance = Vector3.Distance(start, end);
-        float duration = distance / moveSpeed;
-        float elapsedTime = 0f;
+        float moveTime = segmentTime * 0.5f; // Half of the time for moving
+        float waitTime = segmentTime * 0.5f; // Half of the time for waiting
 
+        // Move to position
+        yield return MoveBetweenPoints(monorail.monorailTransform, monorail.startPoint.position, monorail.endPoint.position, moveTime);
+
+        // Wait at the position
+        yield return new WaitForSeconds(waitTime);
+
+        // Move back to start
+        yield return MoveBetweenPoints(monorail.monorailTransform, monorail.endPoint.position, monorail.startPoint.position, moveTime);
+    }
+
+    private IEnumerator MoveBetweenPoints(Transform obj, Vector3 start, Vector3 end, float duration)
+    {
+        float elapsedTime = 0f;
         while (elapsedTime < duration)
         {
-            monorail.localPosition = Vector3.Lerp(start, end, elapsedTime / duration);
+            float t = elapsedTime / duration;
+            if (movementCurve != null)
+            {
+                t = movementCurve.Evaluate(t);
+            }
+
+            obj.position = Vector3.Lerp(start, end, t);
             elapsedTime += Time.deltaTime;
             yield return null;
         }
-
-        monorail.localPosition = end;
+        obj.position = end;
     }
 }
