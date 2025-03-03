@@ -3,21 +3,20 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    public float moveSpeed = 5f;
-    public float rotationSpeed = 300f;
-    public float pushForce = 10f; // Force when running into objects
-    public float kickForce = 10f; // Force for the kick action
-    public float gravity = -9.81f; // Gravity strength
-    public int playerIndex = 0; // 0 for Player 1, 1 for Player 2
+    [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] private float rotationSpeed = 300f;
+    [SerializeField] private float pushForce = 10f; // Force when running into objects
+    [SerializeField] private float kickForce = 10f; // Force for the kick action
+    [SerializeField] private int playerIndex = 0; // 0 for Player 1, 1 for Player 2
+    [SerializeField] private float _gravityMultiplier = 1f;
 
-    private CharacterController characterController;
+    private Rigidbody rb;
     private Vector2 moveInput;
     private PlayerInput playerInput;
-    private float verticalVelocity; // Tracks falling speed
 
     private void Awake()
     {
-        characterController = GetComponent<CharacterController>();
+        rb = GetComponent<Rigidbody>();
         playerInput = GetComponent<PlayerInput>();
     }
 
@@ -37,8 +36,13 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        MoveCharacter();
         RotateCharacter();
+    }
+
+    private void FixedUpdate()
+    {
+        MoveCharacter();
+        rb.AddForce(Physics.gravity * _gravityMultiplier, ForceMode.Acceleration);
     }
 
     private void OnMove(InputAction.CallbackContext context)
@@ -48,20 +52,9 @@ public class PlayerController : MonoBehaviour
 
     private void MoveCharacter()
     {
-        Vector3 move = new Vector3(moveInput.x, 0, moveInput.y).normalized;
+        Vector3 move = new Vector3(moveInput.x, 0, moveInput.y).normalized * moveSpeed;
 
-        // Apply gravity inline
-        if (characterController.isGrounded && verticalVelocity < 0f)
-        {
-            verticalVelocity = -1f; // Keep grounded
-        }
-        else
-        {
-            verticalVelocity += gravity * Time.deltaTime; // Fall when not grounded
-        }
-
-        move = move * moveSpeed + Vector3.up * verticalVelocity;
-        characterController.Move(move * Time.deltaTime);
+        rb.linearVelocity += new Vector3(move.x, 0, move.z);
     }
 
     private void RotateCharacter()
@@ -71,17 +64,6 @@ public class PlayerController : MonoBehaviour
             float targetAngle = Mathf.Atan2(moveInput.x, moveInput.y) * Mathf.Rad2Deg;
             Quaternion targetRotation = Quaternion.Euler(0, targetAngle, 0);
             transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-        }
-    }
-
-    private void OnControllerColliderHit(ControllerColliderHit hit)
-    {
-        Rigidbody rb = hit.gameObject.GetComponent<Rigidbody>();
-        if (rb != null)
-        {
-            Vector3 forceDirection = hit.moveDirection.normalized;
-            float forceMagnitude = moveInput.magnitude * pushForce;
-            rb.AddForce(forceDirection * forceMagnitude, ForceMode.Impulse);
         }
     }
 
@@ -100,6 +82,6 @@ public class PlayerController : MonoBehaviour
 
     public void Bounce(float bounceStrength)
     {
-        characterController.Move(new Vector3(0, 1 * bounceStrength, 0));
+        rb.AddForce(Vector3.up * bounceStrength, ForceMode.Impulse);
     }
 }

@@ -69,7 +69,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd426d36a4a60244fa8b9778904630fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _bounceStrength: 1
+  _bounceStrength: 100
 --- !u!1001 &7500109556428402965
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -78,6 +78,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3357147274253637134}
     m_Modifications:
+    - target: {fileID: 2261476000611332374, guid: 1a5945f7d3244b440a67e0322fca1359, type: 3}
+      propertyPath: m_Convex
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2261476000611332374, guid: 1a5945f7d3244b440a67e0322fca1359, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2609115981263550156, guid: 1a5945f7d3244b440a67e0322fca1359, type: 3}
       propertyPath: m_LocalScale.x
       value: 1
@@ -138,7 +146,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bouncer1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 7120727001272594400, guid: 1a5945f7d3244b440a67e0322fca1359, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
