@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 1213a81272ca019499d3dd2c134d39b8
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 140647
+  packageName: Low Poly Sci-Fi Universe
+  packageVersion: 1.2
+  assetPath: Assets/Low Poly Sci-Fi Universe v 1.2/Scripts/EmissionRndIntensity.cs
+  uploadId: 301191

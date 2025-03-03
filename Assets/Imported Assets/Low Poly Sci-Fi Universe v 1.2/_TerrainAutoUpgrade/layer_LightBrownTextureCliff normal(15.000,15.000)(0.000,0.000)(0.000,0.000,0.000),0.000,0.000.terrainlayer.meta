@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 7ca230a22890665488bb5ef694e00422
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 8574412962073106934
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 140647
+  packageName: Low Poly Sci-Fi Universe
+  packageVersion: 1.2
+  assetPath: Assets/Low Poly Sci-Fi Universe v 1.2/_TerrainAutoUpgrade/layer_LightBrownTextureCliff
+    normal(15.000,15.000)(0.000,0.000)(0.000,0.000,0.000),0.000,0.000.terrainlayer
+  uploadId: 301191
